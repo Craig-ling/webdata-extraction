@@ -2,26 +2,42 @@ import requests
 from lxml import html
 from pandas import DataFrame as df
 
-libpage = requests.get("https://montreal.ca/lieux?mtl_content.lieux.installation.code=BIBL&orderBy=dc_title")
-treelib = html.fromstring(libpage.content)
-lib_names = treelib.xpath('//div[@class="list-group-item-title"]/text()')
-lib_address = treelib.xpath('//div[@class="list-group-item-infos rm-last-child-mb"]/text()')
+def obtaintree(url):
+    libpage = requests.get(url)
+    treelib = html.fromstring(libpage.content)
+    return treelib
 
-i = 0
-f = 0
-g = 1
-lib_tuples = []
+def obtaindata(tree, htmltag):
+    return tree.xpath(htmltag)
 
-while i < len(lib_names):
-    lib_tuples.append((lib_names[i], lib_address[f],
-                             lib_address[g]))
-    i += 1
-    f += 2
-    g += 2
+def createtuple(namedata, addrdata):
+    i = 0
+    f = 0
+    g = 1
+    lib_tuples = []
+    while i < len(namedata):
+        lib_tuples.append((namedata[i], addrdata[f],
+                                 addrdata[g]))
+        i += 1
+        f += 2
+        g += 2
 
-print(lib_tuples)
+    return lib_tuples
 
-frame = df(lib_tuples, columns = ['Name', 'Address', 'Borough'])
-print(frame)
-frame.to_excel("mtl_libraries.xlsx")
+def writetoxl(tupdata, columns):
+    frame = df(tupdata, columns = columns)
+    frame.to_excel("mtl_libraries.xlsx")
+
+def main():
+    webtree = obtaintree("https://montreal.ca/lieux?mtl_content.lieux.installation.code=BIBL&orderBy=dc_title")
+
+    lib_names = obtaindata(webtree, '//div[@class="list-group-item-title"]/text()')
+    lib_address = obtaindata(webtree, '//div[@class="list-group-item-infos rm-last-child-mb"]/text()')
+
+    data_tuple = createtuple(lib_names, lib_address)
+
+    writetoxl(data_tuple, ['Name', 'Address', 'Borough'])
+
+if __name__ == "__main__":
+    main()
 
