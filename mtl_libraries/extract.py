@@ -2,14 +2,21 @@ import requests
 from lxml import html
 from pandas import DataFrame as df
 
+# Opens a request to scan the web page at provided URL.
+# Then returns a tree object representing the HTML structure.
 def obtaintree(url):
     libpage = requests.get(url)
     treelib = html.fromstring(libpage.content)
     return treelib
 
+# Returns a list of each item sharing the HTML
+# tag provided with the tree structure.
 def obtaindata(tree, htmltag):
     return tree.xpath(htmltag)
 
+# Receives lists consisting of name and address data for
+# each library. Returns a tuple pairing the street address
+# and borough with each library name.
 def createtuple(namedata, addrdata):
     i = 0
     f = 0
@@ -24,8 +31,12 @@ def createtuple(namedata, addrdata):
 
     return lib_tuples
 
-def writetoxl(tupdata, columns):
-    frame = df(tupdata, columns = columns)
+# This function receives a tuple and list as input. Writes the
+# data from the tuple into an xlsx (Excel) file.
+def writetoxl(tupdata, incolumns):
+    frame = df(tupdata, columns = incolumns)
+    # Uncomment the below line to print the Data Frame.
+    #print(frame)
     frame.to_excel("mtl_libraries.xlsx")
 
 def main():
