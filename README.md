@@ -1,8 +1,8 @@
 ## Collection of web scraping projects
 
-### Setup virtual environment and dependencies (Ubuntu)
+### Setup virtual environment and dependencies (Linux)
 
-Tested on Python 3.6.9
+Tested with Python 3.6.9
 
 git clone https://github.com/Craig-ling/webdata\_extraction.git
 cd webdata_extraction  
