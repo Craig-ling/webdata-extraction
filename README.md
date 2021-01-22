@@ -4,7 +4,7 @@
 
 Tested with Python 3.6.9
 
-git clone https://github.com/Craig-ling/webdata\_extraction.git  
+git clone https://github.com/Craig-ling/webdata_extraction.git  
 cd webdata_extraction  
 python3 -m venv env  
 source env/bin/activate  
